@@ -1,18 +1,13 @@
 ---
 title: "Lab 1: R Basics"
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday August 31, 2021"
 ---
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 ```
 
-Name:  
-Andrew ID:  
-Collaborated with:  
-
-This lab is to be done in class (completed outside of class time if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted PDF file on Gradescope, by Friday 9pm, this week. 
+Name: Rufus Petrie
 
 ```{r}
 ## For reproducibility --- don't change this!
@@ -28,7 +23,7 @@ The binomial distribution $\mathrm{Bin}(m,p)$ is defined by the number of succes
 
 The R function `rbinom()` generates random variables with a binomial distribution. E.g., 
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 rbinom(n=20, size=10, prob=0.5)
 ```
 
