@@ -70,7 +70,12 @@ Q1. Warming up with map
    Store each of the results in a different vector and check that they are all identical.
       
 ```{r q1a}
-
+v1 <- unlist(map(got_chars, function(x){return(x$name)}))
+v2 <- map_chr(got_chars, function(x){return(x$name)})
+# sapply(got_chars, `[[`, "name")
+# v3 <- map_chr(got_chars, "[[", c("name"))
+# v4 <- map_chr()
+map_dfr(got_chars, `[`, c("name"))
 ```
 
 - **1b.** Produce an integer vector that represents how many allegiances each character holds. Do this with whichever map function you'd like, and print the result to the console. Then use this (and your a saved object from the last question) to answer: which character holds the most allegiances? The least?
