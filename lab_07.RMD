@@ -1,7 +1,5 @@
 ---
 title: "Lab 7: Plotting Tools"
-author: "Statistical Computing, 36-350"
-date: "Week of Tuesday October 12, 2021"
 ---
 
 ```{r, include=FALSE}
