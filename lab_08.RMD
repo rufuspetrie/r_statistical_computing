@@ -1,7 +1,7 @@
 ---
 title: 'Lab 8: Functions'
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday October 19, 2021"
+output: pdf_document
 ---
 
 ```{r, include=FALSE}
@@ -22,11 +22,7 @@ knit_hooks$set(output = function(x, options) {
 opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE, linewidth=79)
 ```
 
-Name:  
-Andrew ID:  
-Collaborated with:  
-
-This lab is to be done in class (completed outside of class time if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted PDF file on Gradescope, by Friday 9pm, this week. 
+Name: Rufus Petrie
 
 **This week's agenda**: creating and updating functions; understanding argument and return structures; revisiting Shakespeare's plays; code refactoring.
 
@@ -48,7 +44,16 @@ Q1. Some simple function tasks
 - **1a.** Write a function `huber()` that takes as an input a number $x$, and returns the Huber value $\psi(x)$, as defined above. Hint: the body of a function is just a block of R code, e.g., in this code you can use `if()` and `else()` statements. Check that `huber(1)` returns 1, and `huber(4)` returns 7.
 
 ```{r q1a}
-# YOUR CODE GOES HERE
+huber <- function(x){
+  if(abs(x) < 1){
+    return(x^2)
+  }
+  else{
+    return(2 * abs(x) - 1)
+  }
+}
+huber(1)
+huber(4)
 ```
 
 - **1b.** The Huber function can be modified so that the transition from quadratic to linear happens at an arbitrary cutoff value $a$, as in:
@@ -61,30 +66,46 @@ $$
 Starting with your solution code to the last question, update your `huber()` function so that it takes two arguments: $x$, a number at which to evaluate the loss, and $a$ a number representing the cutoff value. It should now return $\psi_a(x)$, as defined above. Check that `huber(3, 2)` returns 8, and `huber(3, 4)` returns 9.
 
 ```{r q1b}
-# YOUR CODE GOES HERE
+huber <- function(x, a){
+  if(abs(x) < a){
+    return(x^2)
+  }
+  else{
+    return(2 * a * abs(x) - a^2)
+  }
+}
+huber(3,2)
+huber(3,4)
 ```
 
 - **1c.** Update your `huber()` function so that the default value of the cutoff $a$ is 1. Check that `huber(3)` returns 5. 
 ```{r q1c}
-# YOUR CODE GOES HERE
+huber <- function(x, a = 1){
+  if(abs(x) < a){
+    return(x^2)
+  }
+  else{
+    return(2 * a * abs(x) - a^2)
+  }
+}
+huber(3)
 ```
 
 - **1d.** Check that `huber(a=1, x=3)` returns 5. Check that `huber(1, 3)` returns 1. Explain why these are different.
 
 ```{r q1d}
-# YOUR CODE GOES HERE
+huber(a = 1, x = 3)
+huber(1, 3)
 ```
+These are different because one uses positional arguments and the other one makes references, so we're really calculating huber(1,3) AND huber(3,1).
 
 - **1e.** Vectorize your `huber()` function, so that the first input can actually be a vector of numbers, and what is returned is a vector whose elements give the Huber evaluated at each of these numbers. Hint: you might try using `ifelse()`, if you haven't already, to vectorize nicely. Check that `huber(x=1:6, a=3)` returns the vector of numbers (1, 4, 9, 15, 21, 27).
 
 ```{r q1e}
-# YOUR CODE GOES HERE
-```
-
-- **Challenge.** Your instructor computed the Huber function values $\psi_a(x)$ over a bunch of different $x$ values, stored in `huber.vals` and `x.vals`, respectively. However, the cutoff $a$ was, let's say, lost. Using `huber.vals`, `x.vals`, and the definition of the Huber function, you should be able to figure out the cutoff value $a$, at least roughly. Estimate $a$ and explain how you got there. Hint: one way to estimate $a$ is to do so visually, using plotting tools; there are other ways too.
-
-```{r q1chal}
-# YOUR CODE GOES HERE
+huber <- function(x, a = 1){
+  return(ifelse(abs(x) <= a, x^2, 2 * a * abs(x) - a^2))
+}
+huber(x = 1:6, a = 3)
 ```
 
 Q2. Plotting practice, side effects 
@@ -93,19 +114,23 @@ Q2. Plotting practice, side effects
 - **2a.** Professor Tibs created in plot of the Huber function displayed [here](http://www.stat.cmu.edu/~ryantibs/statcomp/labs/huber.png). Reproduce this plot with your own plotting code, and the `huber()` function you wrote above. The axes and title should be just the same, so should the Huber curve (in black), so should be the red dotted lines at the values -1 and 1, and so should the text "Linear", "Quadratic", "Linear". 
 
 ```{r q2a}
-# YOUR CODE GOES HERE
+x <- seq(-2, 2, 0.1)
+plot(x, huber(x), type = "l",
+     main = "Huber", xlab = "x", ylab = "Huber(x)")
+abline(v = c(-1, 1), col = "red", lty = 2)
+text("Linear", x = -1.5, y = 1)
+text("Quadratic", x = 0, y = 1)
+text("Linear", x = 1.5, y = 1)
 ```
 
 - **2b.** Modify the `huber()` function so that, as a side effect, it prints the string "Invented by the great Swiss statistician Peter Huber!" to the console. Hint: use `cat()`. Call your function on an input of your choosing, to demonstrate this side effect.
 
 ```{r q2b}
-# YOUR CODE GOES HERE
-```
-
-- **Challenge.** Further modify your `huber()` function so that, as another side effect, it produces a plot of Switzerland's national flag. Hint: look up this flag up on Google; it's pretty simple; and you should be able to recreate it with a few calls to `rect()`. Call your function on an input of your choosing, to demonstrate its side effects.
-
-```{r q2chal}
-# YOUR CODE GOES HERE
+huber <- function(x, a = 1){
+  cat("Invented by the great Swiss statistician Peter Huber!\n")
+  return(ifelse(abs(x) <= a, x^2, 2 * a * abs(x) - a^2))
+}
+huber(5,5)
 ```
 
 Q3. Exploring function environments
@@ -121,13 +146,19 @@ huber = function(x, a=1) {
 ```
 
 ```{r q3a}
-# YOUR CODE GOES HERE
+x.squared = 500
+huber(5, 10)
+x.squared = "Rufus"
+huber(5, 10)
 ```
 
 - **3b.** Similar to the last question, define the variable `a` to be equal to -59.6, then call `huber(x=3, a=2)`, and show that the value of `a` after this function call is unchanged. And repeat a few times with different assignments for the variable `a`, to reiterate this point.
 
 ```{r q3b}
-# YOUR CODE GOES HERE
+a <- -59.6
+huber(x = 3, a = 2)
+huber(x = 3, a = 4)
+huber(x = 3, a = -2)
 ```
 
 - **3c.** The previous two questions showed you that a function's body has its own environment in which locally defined variables, like those defined in the body itself, or those defined through inputs to the function, take priority over those defined outside of the function. However, when a variable referred to the body of a function is *not defined in the local environment*, the default is to look for it in the global environment (outside of the function).
@@ -141,31 +172,36 @@ huber.sloppy = function(x) {
 ```
 
 ```{r q3c}
-# YOUR CODE GOES HERE
+a <- 1.5
+huber.sloppy(x = 3)
+a <- 5
+huber.sloppy(x = 3)
+a <- "Rufus"
+huber.sloppy(x = 3)
 ```
 
 - **3d.** At last, a difference between `=` and `<-`, explained! Some of you have been asking about this. The equal sign `=` and assignment operator `<-` are often used interchangeably in R, and some people will often say that a choice between the two is mostly a matter of stylistic taste. This is not the full story. Indeed, `=` and `<-` behave very differently when used to set input arguments in a function call. As we showed above, setting, say, `a=5` as the input to `huber()` has no effect on the global assignment for `a`. However, replacing `a=5` with `a<-5` in the call to `huber()` is entirely different in terms of its effect on `a`. Demonstrate this, and explain what you are seeing in terms of global assignment.
 
 ```{r q3d}
-# YOUR CODE GOES HERE
+a <- 4
+huber(5, a <- 5)
+a
 ```
+When using the assignment operator in a function call, it will override previously defined variables.
 
-- **3e.** The story now gets even more subtle. It turns out that the assignment operator `<-` allows us to define new global variables even when we are specifying inputs to a function. Pick a variable name that has not been defined yet in your workspace, say `b` (or something else, if this has already been used in your R Markdown document). Call `huber(x=3, b<-20)`, then display the value of `b`---this variable should now exist in the global enviroment, and it should be equal to 20! Also, can you explain the output of `huber(x=3, b<-20)`?
+- **3e.** The story now gets even more subtle. It turns out that the assignment operator `<-` allows us to define new global variables even when we are specifying inputs to a function. Pick a variable name that has not been defined yet in your workspace, say `b` (or something else, if this has already been used in your R Markdown document). Call `huber(x=3, b<-20)`, then display the value of `b`---this variable should now exist in the global environment, and it should be equal to 20! Also, can you explain the output of `huber(x=3, b<-20)`?
 
 ```{r q3e}
-# YOUR CODE GOES HERE
+huber(x = 3, b <- 20)
+b
+huber(3, a = b)
 ```
+It appears that if we use the assignment operator instead of a keyword argument, R will interpret the variable we defined as the keyword instead.
 
 - **Challenge.** The property of the assignment operator `<-` demonstrated in the last question, although tricky, can also be pretty useful. Leverage this property to plot the function $y=0.05x^2 - \sin(x)\cos(x) + 0.1\exp(1+\log(x))$ over 50 x values between 0 and 2, using only one line of code and one call to the function `seq()`.
 
 ```{r q3chal1}
-# YOUR CODE GOES HERE
-```
-
-- **Challenge.** Give an example to show that the property of the assignment operator `<-` demonstrated in the last two questions does not hold in the body of a function. That is, give an example in which `<-` is used in the body of a function to define a variable, but this doesn't translate into global assignment.
-
-```{r q3chal2}
-# YOUR CODE GOES HERE
+plot(x <- seq(0, 2, by = 2/50), 0.05*x^2 - sin(x)/cos(x) + 0.1*exp(1 + log(x)))
 ```
 
 Shakespeare's complete works
@@ -195,6 +231,7 @@ get.wordtab.from.url = function(str.url, split="[[:space:]]|[[:punct:]]",
                                 tolower=TRUE, keep.nums=FALSE) {
   lines = readLines(str.url)
   text = paste(lines, collapse=" ")
+  lines = lines[lines != ""]
   words = strsplit(text, split=split)[[1]]
   words = words[words != ""]
     
@@ -209,56 +246,124 @@ get.wordtab.from.url = function(str.url, split="[[:space:]]|[[:punct:]]",
   wordtab = table(words)
   
   return(list(wordtab=wordtab,
+              words=words,
+              lines=lines,
+              number.unique.words=length(wordtab),
+              number.total.words=sum(wordtab),
+              longest.word=words[which.max(nchar(words))]))
+}
+shakespeare.wordobj <- 
+  get.wordtab.from.url("http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt")
+# Wordtab
+head(shakespeare.wordobj$wordtab)
+# Lines
+head(shakespeare.wordobj$lines, 6)
+# Words
+head(shakespeare.wordobj$words, 6)
+
+```
+
+- **4b.** Go back and look Q5 of Lab 6, where you located Shakespeare's plays in the lines of text for Shakespeare's complete works. Set `shakespeare.lines = shakespeare.wordobj$lines`, and then rerun your solution code (or the rerun the official solution code, if you'd like) for Q5 of Lab 6 on the lines of text stored in `shakespeare.lines`. (Note: you don't actually need to rerun the code for Q5d or Q5e, since the code for Q5f will accomplish the same task only without encountering `NA`s). You should end up with two vectors `titles.start` and `titles.end`, containing the start and end positions of each of Shakespeare's plays in `shakespeare.lines`. Print out `titles.start` and `titles.end` to the console.
+
+```{r q4b}
+shakespeare.lines = shakespeare.wordobj$lines
+shakespeare.lines <- trimws(shakespeare.lines)
+toc.start <- which(shakespeare.lines == "THE SONNETS")[1]
+toc.end <- which(shakespeare.lines == "VENUS AND ADONIS")[1]
+
+n <- toc.end - toc.start + 1
+titles <- vector(length = n)
+for(i in 1:n){
+  titles[i] <- shakespeare.lines[toc.start+ i-1]
+}
+
+titles.start <- vector(length = n)
+for(i in 1:n){
+  titles.start[i] <-  grep(pattern=titles[i], x=shakespeare.lines)[2]
+}
+
+titles.end <- vector(length = n)
+for(i in 1:(n-1)){
+  titles.end[i] <- titles.start[i+1]-1
+}
+titles.end[n] <- length(shakespeare.lines)
+
+titles.start
+titles.end
+```
+
+- **4c.** Create a list `shakespeare.lines.by.play` of length equal to the number of Shakespeare's plays (a number you should have already computed in the solution to the last question). Using a `for()` loop, and relying on `titles.start` and `titles.end`, extract the appropriate subvector of `shakespeare.lines` for each of Shakespeare's plays, and store it as a component of `shakespeare.lines.by.play`. That is, `shakespeare.lines.by.play[[1]]` should contain the lines for Shakespeare's first play, `shakespeare.lines.by.play[[2]]` should contain the lines for Shakespeare's second play, and so on. Name the components of `shakespeare.lines.by.play` according to the titles of the plays.
+
+```{r q4c}
+shakespeare.lines.by.play <- vector(mode = "list", length = n)
+for(i in 1:n){
+  shakespeare.lines.by.play[[i]] <- shakespeare.wordobj$lines[titles.start[i]:titles.end[i]]
+names(shakespeare.lines.by.play) <- titles
+}
+```
+
+- **4d.** Using one of the apply functions, along with `head()`, print the first 4 lines of each of Shakespeare's plays to the console (sorry graders ...). This should only require one line of code.
+
+```{r q4d}
+lapply(shakespeare.lines.by.play, FUN = head, n = 4)
+```
+
+Q5. Getting word tables play-by-play
+===
+
+- **5a.** Define a function `get.wordtab.from.lines()` to have the same argument structure as `get.wordtab.from.url()`, which recall you last updated in Q2a, except that the first argument of `get.wordtab.from.lines()` should be `lines`, a string vector passed by the user that contains lines of text to be processed. The body of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` is passed and does not need to be computed using `readlines()`. The output of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` does not need to be returned as a component. For good practice, include documentation for your `get.wordtab.from.lines()` function in comments.
+
+```{r q5a}
+get.wordtab.from.lines = function(lines, split="[[:space:]]|[[:punct:]]",
+                                tolower=TRUE, keep.nums=FALSE) {
+  text = paste(lines, collapse=" ")
+  lines = lines[lines != ""]
+  words = strsplit(text, split=split)[[1]]
+  words = words[words != ""]
+    
+  # Convert to lower case, if we're asked to
+  if (tolower) words = tolower(words)
+    
+  # Get rid of words with numbers, if we're asked to
+  if (!keep.nums) 
+    words = grep("[0-9]", words, inv=TRUE, val=TRUE)
+  
+  # Compute the word table
+  wordtab = table(words)
+  
+  return(list(wordtab=wordtab,
+              words = words,
               number.unique.words=length(wordtab),
               number.total.words=sum(wordtab),
               longest.word=words[which.max(nchar(words))]))
 }
 ```
 
-- **4b.** Go back and look Q5 of Lab 6, where you located Shakespeare's plays in the lines of text for Shakespeare's complete works. Set `shakespeare.lines = shakespeare.wordobj$lines`, and then rerun your solution code (or the rerun the official solution code, if you'd like) for Q5 of Lab 6 on the lines of text stored in `shakespeare.lines`. (Note: you don't actually need to rerun the code for Q5d or Q5e, since the code for Q5f will accomplish the same task only without encountering `NA`s). You should end up with two vectors `titles.start` and `titles.end`, containing the start and end positions of each of Shakespeare's plays in `shakespeare.lines`. Print out `titles.start` and `titles.end` to the console.
-
-```{r q4b}
-# YOUR CODE GOES HERE
-```
-
-- **4c.** Create a list `shakespeare.lines.by.play` of length equal to the number of Shakespeare's plays (a number you should have already computed in the solution to the last question). Using a `for()` loop, and relying on `titles.start` and `titles.end`, extract the appropriate subvector of `shakespeare.lines` for each of Shakespeare's plays, and store it as a component of `shakespeare.lines.by.play`. That is, `shakespeare.lines.by.play[[1]]` should contain the lines for Shakespeare's first play, `shakespeare.lines.by.play[[2]]` should contain the lines for Shakespeare's second play, and so on. Name the components of `shakespeare.lines.by.play` according to the titles of the plays.
-
-```{r q4c}
-# YOUR CODE GOES HERE
-```
-
-- **4d.** Using one of the apply functions, along with `head()`, print the first 4 lines of each of Shakespeare's plays to the console (sorry graders ...). This should only require one line of code.
-
-```{r q4d}
-# YOUR CODE GOES HERE
-```
-
-Q5. Getting word tables play-by-play
-===
-
-- **5a.** Define a function `get.wordtab.from.lines()` to have the same argument structure as `get.wordtab.from.url()`, which recall you last updated in Q2a, except that the first argument of `get.wordtab.from.lines()` should be `lines`, a string vector passed by the user that contains lines of text to be processed. The body of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` is passed and does not need to be computed using `readlines()`. The output of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` does not need to be returned as a component. For good practice, incude documentation for your `get.wordtab.from.lines()` function in comments.
-
-```{r q5a}
-# YOUR CODE GOES HERE
-```
-
 - **5b.** Using a `for()` loop or one of the apply functions (your choice here), run the `get.wordtab.from.lines()` function on each of the components of `shakespeare.lines.by.play`, (with the rest of the arguments at their default values). Save the result in a list called `shakespeare.wordobj.by.play`. That is, `shakespeare.wordobj.by.play[[1]]` should contain the result of calling this function on the lines for the first play, `shakespeare.wordobj.by.play[[2]]` should contain the result of calling this function on the lines for the second play, and so on. 
 
 ```{r q5b}
-# YOUR CODE GOES HERE
+shakespeare.wordobj.by.play <- lapply(shakespeare.lines.by.play, FUN = get.wordtab.from.lines)
 ```
 
 - **5c.** Using one of the apply functions, compute numeric vectors `shakespeare.total.words.by.play` and `shakespeare.unique.words.by.play`, that contain the number of total words and number of unique words, respectively, for each of Shakespeare's plays. Each vector should only require one line of code to compute. Hint: recall `` `[[`()`` is actually a function that allows you to do extract a named component of a list; e.g., try `` `[[`(shakespeare.wordobj, "number.total.words")``, and you'll see this is the same as `shakespeare.wordobj[["number.total.words"]]`; you should take advantage of this functionality in your apply call. What are the 5 longest plays, in terms of total word count? The 5 shortest plays?
 
 ```{r q5c}
-# YOUR CODE GOES HERE
+shakespeare.total.words.by.play <- lapply(shakespeare.wordobj.by.play, "[[", "number.total.words")
+names(shakespeare.total.words.by.play) <- titles
+shakespeare.unique.words.by.play <- lapply(shakespeare.wordobj.by.play, "[[", "number.unique.words")
+names(shakespeare.unique.words.by.play) <- titles
+shakespeare.total.words.by.play[order(unlist(shakespeare.total.words.by.play))][40:44]
+shakespeare.total.words.by.play[order(unlist(shakespeare.total.words.by.play))][1:5]
 ```
+
 
 - **5d.** Plot the number of unique words versus number of total words, across Shakeapeare's plays. Set the title and label the axes appropriately. Is there a consistent trend you notice?
 
 ```{r q5d}
-# YOUR CODE GOES HERE
+plot(shakespeare.unique.words.by.play, shakespeare.total.words.by.play,
+     main = "Unique vs. Total Words", xlab="Unique Words", ylab="Total Words")
 ```
+The trend between total words and unique words seems pretty linear.
 
 Q6. Refactoring the word table functions
 ===
@@ -268,11 +373,9 @@ Q6. Refactoring the word table functions
     Call your new `get.wordtab.from.url()` function on the URL for Shakespeare's complete works, saving the result as `shakespeare.wordobj2`. Compare some of the components of `shakespeare.wordobj2` to those of `shakespeare.wordobj` (which was computed using the old function definition) to check that your new implementation works as it should.
 
 ```{r q6}
-# YOUR CODE GOES HERE
-```
+get.wordtab.from.url <- function(str.url){
+  return(get.wordtab.from.lines(readLines(str.url)))
+}
 
-- **Challenge.** Check using `all.equal()` whether `shakespeare.wordobj` and `shakespeare.wordobj2` are the same. Likely, this will not return `TRUE`. (If it does, then you've already solved this challenge question!) Modify your `get.wordtab.from.url()` function from the last question, so that it still calls `get.wordtab.from.lines()` to do the hard work, but produces an output exactly the same as the original `shakespeare.wordobj` object. Demonstrate your success by calling `all.equal()` once again.
-
-```{r q6chal}
-# YOUR CODE GOES HERE
+shakespeare.wordobj2 <- get.wordtab.from.url("http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt")
 ```

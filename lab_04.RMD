@@ -70,12 +70,12 @@ Q1. Warming up with map
    Store each of the results in a different vector and check that they are all identical.
       
 ```{r q1a}
-v1 <- unlist(map(got_chars, function(x){return(x$name)}))
-v2 <- map_chr(got_chars, function(x){return(x$name)})
+# v1 <- unlist(map(got_chars, function(x){return(x$name)}))
+# v2 <- map_chr(got_chars, function(x){return(x$name)})
 # sapply(got_chars, `[[`, "name")
 # v3 <- map_chr(got_chars, "[[", c("name"))
 # v4 <- map_chr()
-map_dfr(got_chars, `[`, c("name"))
+unlist(map_dfr(got_chars, `[`, c("name")))
 ```
 
 - **1b.** Produce an integer vector that represents how many allegiances each character holds. Do this with whichever map function you'd like, and print the result to the console. Then use this (and your a saved object from the last question) to answer: which character holds the most allegiances? The least?
@@ -108,7 +108,7 @@ map_dfr(got_chars, `[`, c("name"))
 - **Challenge.** Repeat the same task as in the last question, but using `map_df()` and no post-processing. The result will now be a data frame (not a matrix). Print the first 6 rows of the result to the console. Hint: `map_dfr()` will throw an error if it can't infer column names.
 
 ```{r q1chal}
-# YOUR CODE GOES HERE
+
 ```
 
 Q2. Cultural studies
@@ -117,31 +117,31 @@ Q2. Cultural studies
 - **2a.** Using `map_dfr()`, create a data frame of dimension 30 x 5, whose columns represent, for each Game of Thrones character, their name, birth date, death date, gender, and culture. Store it as `got_df` and print the last 3 rows to the console.
 
 ```{r q2a}
-# YOUR CODE GOES HERE
+
 ```
 
 - *2b.* Using `got_df`, show that you can compute whether each character is alive or not, and compare this to what is stored in `got_chars`, demonstrating that the two ways of checking whether each character is alive lead to equal results.
 
 ```{r q2b}
-# YOUR CODE GOES HERE
+
 ```
 
 - **2c.** Using `filter()`, print the subset of the rows of `got_df` that correspond to Ironborn characters. Then print the subset that correspond to female Northmen. 
 
 ```{r q2c}
-# YOUR CODE GOES HERE
+
 ```
 
 - **2d.** Create a matrix of dimension (number of cultures) x 2 that counts how many women and men there are in each culture appearing in `got_df`. Print the results to the console. Hint: what happens if you pass `table()` two arguments?
 
 ```{r q2d}
-# YOUR CODE GOES HERE
+
 ```
 
 - **2e.** Using `group_by()` and `summarize()` on `got_df`, compute how many characters in each culture have died. Which culture---aside from the unknown category represented by ""---has the most deaths?
 
 ```{r q2e}
-# YOUR CODE GOES HERE
+
 ```
 
 Rio Olympics data set
@@ -159,7 +159,9 @@ Q3. Practice with grouping and summarizing
 - **3a.** Using `group_by()` and `summarize()`, compute how many athletes competed for each country in the `rio` data frame? Print the results for the first 10 countries to the console. Building off your here answer, use an additional call to `filter()` to compute which country had the most number of athletes and how many that was. Hint: consider using `n()` from the `dplyr` package for the first part here.
 
 ```{r q3a}
-# YOUR CODE GOES HERE
+rio.sum <- rio %>% 
+  group_by(nationality) %>% 
+  summarize()
 ```
 
 - **3b.** Using `group_by()`, `summarize()`, and `filter()`, compute which country had the most numnber of total medals and many that was. 
@@ -200,25 +202,38 @@ More practice with data frame computations
 - **4a.** Confirm that both `sprint.m.df` and `sprint.w.df` are data frames. Delete the `Rank` column from each data frame, then display the first and last 3 rows of each. 
 
 ```{r q4a}
-# YOUR CODE GOES HERE
+typeof(sprint.m.df)
+typeof(sprint.w.df)
+sprint.m.df$Rank <- NULL
+sprint.w.df$Rank <- NULL
 ```
 
 - **4b.** Recompute the ranks for the men's data set from the `Time` column and add them back as a `Rank` column to `sprint.m.df`. Do the same for the women's data set. After adding back the rank columns, print out the first 10 rows of each data frame, but only the `Time`, `Name`, `Date`, and `Rank` columns. Hint: consider using `rank()`.
 
 ```{r q4b}
-# YOUR CODE GOES HERE
+sprint.m.df <- sprint.m.df %>% 
+  mutate(Rank = rank(Time))
+sprint.w.df <- sprint.w.df %>% 
+  mutate(Rank = rank(Time))
+vars = c("Time", "Name", "Date", "Rank")
+head(sprint.m.df[,vars], 10)
+head(sprint.w.df[,vars], 10)
 ```
 
 - **4c.** Using base R functions, compute, for each country, the number of sprint times from this country that appear in the men's data set. Call the result `sprint.m.counts`. Do the same for the women's data set, and call the result `sprint.w.counts`. What are the 5 most represented countries, for the men, and for the women? (Interesting side note: go look up the population of Jamaica, compared to that of the US. Pretty impressive, eh?) 
 
 ```{r q4c}
-# YOUR CODE GOES HERE
+sprint.m.counts <- tapply(sprint.m.df, sprint.m.df$Country, FUN = count)
+sprint.w.counts <- tapply(sprint.w.df, sprint.w.df$Country, FUN = count)
+sort(sprint.m.counts)
 ```
 
 - **4d.** Repeat the same calculations as in last part but using `dplyr` functions, and print out again the 5 most represented countries for men and women. (No need to save new variables.) Hint: consider using `arrange()` from the `dplyr` library.
 
 ```{r q4d}
-# YOUR CODE GOES HERE
+sprint.m.df %>% 
+  group_by(Country) %>% 
+  
 ```
 
 - **4e.** Are there any countries that are represented by women but not by men, and if so, what are they? Vice versa, represented by men and not women? Hint: consider using the `%in%` operator. 
