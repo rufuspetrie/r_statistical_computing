@@ -1,7 +1,6 @@
 ---
 title: 'Lab 6: Text Manipulation'
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday October 5, 2019"
 output: pdf_document
 ---
 
