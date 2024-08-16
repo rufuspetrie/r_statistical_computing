@@ -1,7 +1,6 @@
 ---
 title: "Lab 12: Relational Databases"
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday November 16, 2021"
 ---
 
 ```{r, include=FALSE}
@@ -23,11 +22,7 @@ knit_hooks$set(output = function(x, options) {
 opts_chunk$set(cache=FALSE, autodep=FALSE, cache.comments=FALSE, linewidth=79)
 ```
 
-Name:  
-Andrew ID:  
-Collaborated with:  
-
-This lab is to be done in class (completed outside of class time if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted PDF file on Gradescope, by Friday 9pm, this week. 
+Name: Rufus Petrie
 
 **This week's agenda**: practicing SQLite queries, performing simple computations and joins, and testing our understanding by writing equivalent R code for these database manipulations.
 

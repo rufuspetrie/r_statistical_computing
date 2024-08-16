@@ -1,7 +1,6 @@
 ---
 title: "Lab 14: Statistical Prediction"
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday November 30, 2021"
 ---
 
 ```{r, include=FALSE}
@@ -22,11 +21,7 @@ knit_hooks$set(output = function(x, options) {
 opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE, linewidth=79)
 ```
 
-Name:  
-Andrew ID:  
-Collaborated with:  
-
-This lab is to be done in class (completed outside of class time if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted PDF file on Gradescope, by **Monday 9pm, next week**. 
+Name: Rufus Petrie
 
 **This week's agenda**: understanding training and testing errors, implementing sample-splitting and cross-validation, and trying a bunch of statistical prediction methods (optional).
 

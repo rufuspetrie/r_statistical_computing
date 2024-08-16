@@ -1,7 +1,6 @@
 ---
 title: "Lab 11: Debugging and Testing"
 author: "Statistical Computing, 36-350"
-date: "Week of Tuesday November 9, 2021"
 ---
 
 ```{r, include=FALSE}
@@ -22,11 +21,7 @@ knit_hooks$set(output = function(x, options) {
 opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE, linewidth=79)
 ```
 
-Name:  
-Andrew ID:  
-Collaborated with:  
-
-This lab is to be done in class (completed outside of class time if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted PDF file on Gradescope, by Friday 9pm, this week. 
+Name: Rufus Petrie
 
 **This week's agenda**: practicing debugging with `cat()`, `print()`, and `browser()`; simple testing.
 
